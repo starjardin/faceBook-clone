@@ -1,0 +1,30 @@
+// TODO
+
+1- create a component folder to be the host of your file OK
+2- Data structure Ok
+userName
+like
+img(url)
+desc
+Date
+
+[
+  {
+    "userName" : "",
+    "imgUrl" : "",
+    "like" : "",
+    "description" : "",
+    "date" : "",
+
+  }
+]
+
+*******Comments data, username, pic
+
+3-set routers
+  -feed (home)
+  -Add post(/addpost)
+  -options(/options)
+
+4 - set up your states using reducer
+5- think about the compounds components
