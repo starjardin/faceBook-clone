@@ -1,9 +1,18 @@
 [
   {
     "userName" : "Honey",
-    "imgUrl" : "imgUrl",
-    "like" : "0",
+    "imgUrl" : "https://picsum.photos/id/237/200/300",
+    "like" : 0,
     "description" : "Here is a new facebook post",
-    "date" : "Date.now()"
+    "date" : "1606718512343",
+    "id" : "1606718512343"
+  },
+  {
+    "userName" : "Honey",
+    "imgUrl" : "https://picsum.photos/id/237/200/300",
+    "like" : 0,
+    "description" : "Here is a new facebook post",
+    "date" : "1606722712339",
+    "id" : "1606718512353"
   }
 ]
