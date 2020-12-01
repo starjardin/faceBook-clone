@@ -2,17 +2,40 @@
   {
     "userName" : "Honey",
     "imgUrl" : "https://picsum.photos/id/237/200/300",
-    "like" : 0,
+    "like" : [
+      {
+        "id" : "1606718512343",
+        "userName" : "userName"
+      }
+    ],
     "description" : "Here is a new facebook post",
     "date" : "1606718512343",
-    "id" : "1606718512343"
+    "id" : "1606718512343",
+    "comments" : [
+      {
+        "user" : "user",
+        "img" : "https://picsum.photos/id/237/200/300",
+        "date" : "1606718512343",
+        "textComment" : "this is great"
+      }
+    ]
   },
   {
-    "userName" : "Honey",
+    "userName" : "Fandrama",
     "imgUrl" : "https://picsum.photos/id/237/200/300",
-    "like" : 0,
+    "like" : [
+      
+    ],
     "description" : "Here is a new facebook post",
     "date" : "1606722712339",
-    "id" : "1606718512353"
+    "id" : "1606718512353",
+    "comments" : [
+      {
+        "user" : "user",
+        "img" : "https://picsum.photos/id/237/200/300",
+        "date" : "1606722712339",
+        "textComment" : "cool"
+      }
+    ]
   }
 ]

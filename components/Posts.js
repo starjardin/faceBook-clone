@@ -1,6 +1,7 @@
-import React, { useContext, createContext } from 'react'
+import React, { useContext, createContext, useEffect } from 'react'
 import styled from 'styled-components'
 import reducer from '../reducer/reducer'
+import Comments from './Comments'
 
 const ProfileImg = styled.div`
   display : flex;
@@ -21,30 +22,40 @@ const ProfileImg = styled.div`
 `
 
 export default function Posts() {
-  const [postData, dispatch] = reducer()
-  const postElem = (data) => {
+  const [state, dispatch] = reducer()
+  useEffect(() => {
+    // console.log(state);
+  }, [state])
+  const postElem = (posts) => {
     return (
-      data.map(post => (
-        <PostContainer key={post.id} post={post} like={post.like} dispatch={dispatch}>
+      posts.map(post => (
+        <PostContainer
+          key={post.postId}
+          post={post}
+          dispatch={dispatch}
+          state={state}
+          likes={post.likes}
+        >
           <UserNamePost />
           <ImagePost />
           <PostDescription />
           <LikeButton />
+          <Comments comments={ post.comments }/>
         </PostContainer>
       ))
     )
   }
   return (
     <>
-      {postElem(postData)}
+      {postElem(state.posts)}
     </>
   )
 }
 
 const PostContext = createContext()
-function PostContainer({ children, post, like, dispatch }) {
+function PostContainer({ children, post, likes, dispatch, state }) {
   return (
-    <PostContext.Provider value={{post, like, dispatch}}>
+    <PostContext.Provider value={{post, likes, dispatch, state}}>
       {children}
     </PostContext.Provider>
   )
@@ -56,32 +67,46 @@ function ImagePost() {
 }
 
 function LikeButton() {
-  const { like, dispatch, post } = useContext(PostContext)
-  const postId = post.id
+  const { likes, dispatch, post } = useContext(PostContext)
+  const { postId } = post
   return (
     <div>
         <button
           onClick={() => {
-            dispatch({ type: "LIKE_POST", id : postId})
+          dispatch({
+            type: "LIKE_POST",
+            id: postId,
+            like: {
+              likeId: Date.now(),
+              userId : Date.now()
+            }
+            })
           }}
         >like</button>
-      <span>{ like }</span>
+      <span>{ likes.length }</span>
     </div>
   )
 }
 
 function PostDescription() {
-  const { post }  = useContext(PostContext)
-  return <div>{ post.description }</div>
+  const { post } = useContext(PostContext)
+  return <div>{ post.postTextContent }</div>
 }
 
 function UserNamePost() {
-  const { post } = useContext(PostContext)
+  const { post, state } = useContext(PostContext)
+  const userData = state.users
+  const { userName } = userData.find(user => user.userId === post.postId)
+  const date = post.date
+  const postDate = new Date(date).toDateString()
+  
   return (
     <ProfileImg>
       <img src={post.imgUrl} className="profile" />
-      <p>{post.userName}</p>
-      <p className="date">{post.date}</p>
+      <p>{ userName }</p>
+      <p className="date">{postDate}</p>
     </ProfileImg>
   )
 }
+
+export { PostContext }

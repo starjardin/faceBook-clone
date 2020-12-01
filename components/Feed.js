@@ -6,8 +6,6 @@ export default function Feed() {
     const initialData = {
 
   }
-  
-
   return (
     <>
       <Posts />
