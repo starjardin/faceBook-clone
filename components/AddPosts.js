@@ -1,35 +1,67 @@
-import React from 'react'
-import reducer from '../reducer/reducer'
+import React, { useContext } from 'react'
+import { PostContext } from '../reducer/reducer'
+import styled from 'styled-components'
+
+const FormStyle = styled.form`
+  padding : 2rem;
+  textarea {
+    height : 5rem;
+    max-height : 7rem;
+    width : 50vw;
+    max-width : 80vw;
+  }
+  input {
+    width : 60vw;
+  }
+  button {
+    padding : 0.5rem 2rem;
+    border : none;
+    box-shadow : 1px 1px 3px #ccc;
+  }
+  textarea, input {
+    display : block;
+    margin-block : 1rem;
+    font-size: 16px;
+    font-size: max(16px, 1em);
+    font-family: inherit;
+    padding: 0.25em 0.5em;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+  }
+`
 
 export default function AddPosts() {
-  const [postData, dispatch] = reducer()
-
+  const { state, dispatch } = useContext(PostContext)
+  const {posts} = state
   const handleSubmitPost = (e) => {
     e.preventDefault()
-    dispatch({
-      type: "ADD_NEW_POST",
-      newPost: {
+    const newPost = {
         userName : "Romeo",
         imgUrl : "https://picsum.photos/seed/picsum/200/300",
-        like : 0,
-        description : e.target.description.value,
+        like: [],
+        comments : [],
+        postTextContent : e.target.description.value,
         date : Date.now(),
         id : Date.now()
       }
-    })
+    dispatch({ type: "ADD_NEW_POST", posts: [...posts, newPost]})
+    e.target.reset()
   }
 
   return (
     <>
-      <form onSubmit={handleSubmitPost}>
+      <FormStyle onSubmit={handleSubmitPost}>
         <textarea
           name="description"
+          placeholder="Write here your posts description"
         />
         <input type="url"
           name="imgUrl"
+          placeholder="https://picsum.photos/seed/picsum/200/300"
         />
         <button>Post</button>
-      </form>
+      </FormStyle>
     </>
   )
 }

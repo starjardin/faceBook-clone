@@ -1,14 +1,11 @@
 import React from 'react'
-import data from "../data.json"
 import Posts from './Posts'
+import styled from 'styled-components'
 
-export default function Feed() {
-    const initialData = {
+const FeedStyle = styled.div`
+  max-width : 800px;
+  margin-inline : auto; 
+`
 
-  }
-  return (
-    <>
-      <Posts />
-    </>
-  )
-}
+const Feed = () => <FeedStyle><Posts /></FeedStyle>
+export default Feed;

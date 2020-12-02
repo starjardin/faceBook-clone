@@ -4,10 +4,16 @@ import AddPosts from './components/AddPosts'
 import Feed from './components/Feed'
 import Header from './components/Header'
 import Options from './components/Options'
+import styled from 'styled-components'
+
+const AppStyle = styled.div`
+  max-width : 600px;
+  margin-inline : auto;
+`
 
 export default function App() {
   return (
-    <>
+    <AppStyle>
       <Header />
       <Switch>
         <Route exact path="/">
@@ -20,6 +26,6 @@ export default function App() {
           <Options />
         </Route>
      </Switch>
-    </>
+    </AppStyle>
   )
 }

@@ -1,11 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import reducer from '../reducer/reducer'
 
 const HeaderStyle = styled.div`
   display : flex;
   flex-direction : row;
   gap : 2rem;
+  a {
+    text-decoration : none;
+    color : #223422;
+  }
+  a:active,
+  a:focus {
+    color : #22ff22;
+  }
 `
 
 export default function Header() {
@@ -20,7 +29,7 @@ export default function Header() {
           <h2>Add post</h2>
         </Link>
         <Link to="options">
-          <h2>Options</h2>
+          <h2 >UserName</h2>
         </Link>
       </HeaderStyle>
     </>

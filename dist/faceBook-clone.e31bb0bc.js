@@ -33871,7 +33871,7 @@ module.exports = [{
     "commentId": 16068230335,
     "userId": "606823033835",
     "date": 1606823314406,
-    "commentTextContent": "Hello, This is super cool."
+    "textComment": "Hello, This is super cool."
   }]
 }, {
   "postId": "1606825130841",
@@ -33884,12 +33884,12 @@ module.exports = [{
     "commentId": 1606823033835,
     "userId": "121212",
     "date": 1606823314406,
-    "commentTextContent": "Hello, super post."
+    "textComment": "Hello, super post."
   }, {
     "commentId": 16068230335,
     "userId": "606823033835",
     "date": 1606823314406,
-    "commentTextContent": "Hello, This is super cool."
+    "textComment": "Hello, This is super cool."
   }]
 }];
 },{}],"userData.json":[function(require,module,exports) {
@@ -33910,7 +33910,8 @@ module.exports = [{
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = reducer;
+exports.PostContainerProvider = PostContainerProvider;
+exports.PostContext = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -33950,149 +33951,75 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function reducer() {
-  var initialState = {
-    posts: _toConsumableArray(_postsData.default),
-    users: _toConsumableArray(_userData.default),
-    currentUser: {}
-  };
+var initialState = {
+  posts: _toConsumableArray(_postsData.default),
+  users: _toConsumableArray(_userData.default),
+  currentUser: {
+    currentUserId: "1606823012368"
+  }
+};
 
-  var reducerFunc = function reducerFunc(state, action) {
-    var users = state.users,
-        posts = state.posts;
+var reducerFunc = function reducerFunc(state, action) {
+  var users = state.users,
+      posts = state.posts;
 
-    switch (action.type) {
-      case "LIKE_POST":
-        {
-          posts.map(function (post) {
-            if (post.likes.some(function (like) {
-              return like.likeId !== action.id;
-            })) {
-              return _objectSpread(_objectSpread({}, state), {}, {
-                likes: _objectSpread({}, post.likes)
-              });
-            }
+  switch (action.type) {
+    case "LIKE_POST":
+      {
+        posts.map(function (post) {
+          return _objectSpread(_objectSpread({}, state), {}, {
+            post: _objectSpread(_objectSpread({}, post), {}, {
+              like: [].concat(_toConsumableArray(post.likes), [action.like])
+            })
           });
-          return state;
-        }
-        break;
+        });
+        return state;
+      }
 
-      case "ADD_NEW_POST":
-        {
-          return [action.newPost].concat(_toConsumableArray(state));
-        }
-        break;
+    case "ADD_NEW_POST":
+      {
+        return _objectSpread(_objectSpread({}, state), {}, {
+          posts: action.posts
+        });
+      }
 
-      case "ADD_COMMENT":
-        {
-          return state.map(function (post) {
-            if (post.id !== action.id) return post;
+    case "ADD_COMMENT":
+      {
+        var commentedPost = posts.map(function (post) {
+          if (post.postId === action.id) {
             return _objectSpread(_objectSpread({}, post), {}, {
-              comments: [].concat(_toConsumableArray(action.comments), [action.newComment])
+              comments: [].concat(_toConsumableArray(post.comments), [action.newComment])
             });
-          });
-        }
-    }
+          }
 
-    return state;
-  };
+          return post;
+        });
+        return _objectSpread(_objectSpread({}, state), {}, {
+          posts: commentedPost
+        });
+      }
+  }
+};
+
+var PostContext = (0, _react.createContext)();
+exports.PostContext = PostContext;
+
+function PostContainerProvider(_ref) {
+  var children = _ref.children;
 
   var _useReducer = (0, _react.useReducer)(reducerFunc, initialState),
       _useReducer2 = _slicedToArray(_useReducer, 2),
       state = _useReducer2[0],
       dispatch = _useReducer2[1];
 
-  console.log(state);
-  return [state, dispatch];
+  return /*#__PURE__*/_react.default.createElement(PostContext.Provider, {
+    value: {
+      dispatch: dispatch,
+      state: state
+    }
+  }, children);
 }
-},{"react":"node_modules/react/index.js","../postsData.json":"postsData.json","../userData.json":"userData.json"}],"components/AddPosts.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = AddPosts;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _reducer3 = _interopRequireDefault(require("../reducer/reducer"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function AddPosts() {
-  var _reducer = (0, _reducer3.default)(),
-      _reducer2 = _slicedToArray(_reducer, 2),
-      postData = _reducer2[0],
-      dispatch = _reducer2[1];
-
-  var handleSubmitPost = function handleSubmitPost(e) {
-    e.preventDefault();
-    dispatch({
-      type: "ADD_NEW_POST",
-      newPost: {
-        userName: "Romeo",
-        imgUrl: "https://picsum.photos/seed/picsum/200/300",
-        like: 0,
-        description: e.target.description.value,
-        date: Date.now(),
-        id: Date.now()
-      }
-    });
-  };
-
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("form", {
-    onSubmit: handleSubmitPost
-  }, /*#__PURE__*/_react.default.createElement("textarea", {
-    name: "description"
-  }), /*#__PURE__*/_react.default.createElement("input", {
-    type: "url",
-    name: "imgUrl"
-  }), /*#__PURE__*/_react.default.createElement("button", null, "Post")));
-}
-},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js"}],"data.json":[function(require,module,exports) {
-module.exports = [{
-  "userName": "Honey",
-  "imgUrl": "https://picsum.photos/id/237/200/300",
-  "like": [{
-    "id": "1606718512343",
-    "userName": "userName"
-  }],
-  "description": "Here is a new facebook post",
-  "date": "1606718512343",
-  "id": "1606718512343",
-  "comments": [{
-    "user": "user",
-    "img": "https://picsum.photos/id/237/200/300",
-    "date": "1606718512343",
-    "textComment": "this is great"
-  }]
-}, {
-  "userName": "Fandrama",
-  "imgUrl": "https://picsum.photos/id/237/200/300",
-  "like": [],
-  "description": "Here is a new facebook post",
-  "date": "1606722712339",
-  "id": "1606718512353",
-  "comments": [{
-    "user": "user",
-    "img": "https://picsum.photos/id/237/200/300",
-    "date": "1606722712339",
-    "textComment": "cool"
-  }]
-}];
-},{}],"node_modules/shallowequal/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../postsData.json":"postsData.json","../userData.json":"userData.json"}],"node_modules/shallowequal/index.js":[function(require,module,exports) {
 //
 
 module.exports = function shallowEqual(objA, objB, compare, compareContext) {
@@ -36063,7 +35990,89 @@ exports.ServerStyleSheet = Ue;
 "production" !== "development" && "undefined" != typeof navigator && "ReactNative" === navigator.product && console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"), "production" !== "development" && "test" !== "development" && (window["__styled-components-init__"] = window["__styled-components-init__"] || 0, 1 === window["__styled-components-init__"] && console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."), window["__styled-components-init__"] += 1);
 var _default = qe;
 exports.default = _default;
-},{"react-is":"node_modules/react-is/index.js","react":"node_modules/react/index.js","shallowequal":"node_modules/shallowequal/index.js","@emotion/stylis":"node_modules/@emotion/stylis/dist/stylis.browser.esm.js","@emotion/unitless":"node_modules/@emotion/unitless/dist/unitless.browser.esm.js","@emotion/is-prop-valid":"node_modules/@emotion/is-prop-valid/dist/is-prop-valid.browser.esm.js","hoist-non-react-statics":"node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js","process":"../../../AppData/Roaming/npm/node_modules/parcel/node_modules/process/browser.js"}],"components/Comments.js":[function(require,module,exports) {
+},{"react-is":"node_modules/react-is/index.js","react":"node_modules/react/index.js","shallowequal":"node_modules/shallowequal/index.js","@emotion/stylis":"node_modules/@emotion/stylis/dist/stylis.browser.esm.js","@emotion/unitless":"node_modules/@emotion/unitless/dist/unitless.browser.esm.js","@emotion/is-prop-valid":"node_modules/@emotion/is-prop-valid/dist/is-prop-valid.browser.esm.js","hoist-non-react-statics":"node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js","process":"../../../AppData/Roaming/npm/node_modules/parcel/node_modules/process/browser.js"}],"components/AddPosts.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = AddPosts;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _reducer = require("../reducer/reducer");
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n  padding : 2rem;\n  textarea {\n    height : 5rem;\n    max-height : 7rem;\n    width : 50vw;\n    max-width : 80vw;\n  }\n  input {\n    width : 60vw;\n  }\n  button {\n    padding : 0.5rem 2rem;\n    border : none;\n    box-shadow : 1px 1px 3px #ccc;\n  }\n  textarea, input {\n    display : block;\n    margin-block : 1rem;\n    font-size: 16px;\n    font-size: max(16px, 1em);\n    font-family: inherit;\n    padding: 0.25em 0.5em;\n    background-color: #fff;\n    border: 2px solid #ccc;\n    border-radius: 4px;\n  }\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var FormStyle = _styledComponents.default.form(_templateObject());
+
+function AddPosts() {
+  var _useContext = (0, _react.useContext)(_reducer.PostContext),
+      state = _useContext.state,
+      dispatch = _useContext.dispatch;
+
+  var posts = state.posts;
+
+  var handleSubmitPost = function handleSubmitPost(e) {
+    e.preventDefault();
+    var newPost = {
+      userName: "Romeo",
+      imgUrl: "https://picsum.photos/seed/picsum/200/300",
+      like: [],
+      comments: [],
+      postTextContent: e.target.description.value,
+      date: Date.now(),
+      id: Date.now()
+    };
+    dispatch({
+      type: "ADD_NEW_POST",
+      posts: [].concat(_toConsumableArray(posts), [newPost])
+    });
+    e.target.reset();
+  };
+
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(FormStyle, {
+    onSubmit: handleSubmitPost
+  }, /*#__PURE__*/_react.default.createElement("textarea", {
+    name: "description",
+    placeholder: "Write here your posts description"
+  }), /*#__PURE__*/_react.default.createElement("input", {
+    type: "url",
+    name: "imgUrl",
+    placeholder: "https://picsum.photos/seed/picsum/200/300"
+  }), /*#__PURE__*/_react.default.createElement("button", null, "Post")));
+}
+},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/Comments.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36073,9 +36082,9 @@ exports.default = Comments;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _reducer3 = _interopRequireDefault(require("../reducer/reducer"));
-
 var _Posts = require("./Posts");
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36083,36 +36092,37 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n  display : flex;\n  align-items : center;\n  padding-top : 1rem;\n  position : relative;\n  gap : 1rem;\n  max-width : 350px;\n  img {\n    display : block;\n    width : 2rem;\n    height : 2rem;\n    border-radius : 50%;\n  }\n  .date {\n    position : absolute;\n    right : 0;\n  }\n"]);
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+  _templateObject = function _templateObject() {
+    return data;
+  };
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+  return data;
+}
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+var CommentStyle = _styledComponents.default.div(_templateObject());
 
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function Comments(props) {
-  var _reducer = (0, _reducer3.default)(),
-      _reducer2 = _slicedToArray(_reducer, 2),
-      state = _reducer2[0],
-      dispatch = _reducer2[1];
+function Comments(_ref) {
+  var post = _ref.post;
 
   var _useContext = (0, _react.useContext)(_Posts.PostContext),
-      post = _useContext.post;
+      state = _useContext.state,
+      dispatch = _useContext.dispatch;
 
-  var comments = post.comments;
-  console.log(comments);
+  var posts = state.posts,
+      users = state.users;
+  var comments = posts.comments;
 
   function addCommenstFunction(e) {
     e.preventDefault();
     dispatch({
       comments: comments,
-      id: post.id,
       type: "ADD_COMMENT",
+      id: post.postId,
       newComment: {
         user: "New user",
         img: "https://picsum.photos/id/237/200/300",
@@ -36123,31 +36133,43 @@ function Comments(props) {
     });
   }
 
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", null, comments.map(function (comment, index) {
-    return /*#__PURE__*/_react.default.createElement("p", {
+  var date = new Date(post.date);
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, post.comments.map(function (comment, index) {
+    return /*#__PURE__*/_react.default.createElement(CommentStyle, {
       key: index
-    }, comment.commentTextContent);
-  })), /*#__PURE__*/_react.default.createElement("form", {
+    }, /*#__PURE__*/_react.default.createElement("img", {
+      src: post.imgUrl
+    }), /*#__PURE__*/_react.default.createElement("p", null, comment.textComment), /*#__PURE__*/_react.default.createElement("p", {
+      className: "date"
+    }, date.toLocaleDateString()));
+  }), /*#__PURE__*/_react.default.createElement("form", {
     onSubmit: addCommenstFunction
   }, /*#__PURE__*/_react.default.createElement("input", {
     name: "comment",
     placeholder: "Be the first commenter"
   }), /*#__PURE__*/_react.default.createElement("button", null, "Post")));
 }
-},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","./Posts":"components/Posts.js"}],"components/Posts.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","./Posts":"components/Posts.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/Posts.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = Posts;
-exports.PostContext = void 0;
+Object.defineProperty(exports, "PostContext", {
+  enumerable: true,
+  get: function () {
+    return _reducer.PostContext;
+  }
+});
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
-var _reducer3 = _interopRequireDefault(require("../reducer/reducer"));
+var _reducer = require("../reducer/reducer");
+
+var _userData = _interopRequireDefault(require("../userData.json"));
 
 var _Comments = _interopRequireDefault(require("./Comments"));
 
@@ -36157,17 +36179,15 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["\n  display : block;\n  margin-bottom : 2rem;\n  margin-top : 2rem;\n"]);
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+  return data;
+}
 
 function _templateObject() {
   var data = _taggedTemplateLiteral(["\n  display : flex;\n  align-items : center;\n  position : relative;\n  gap : 1rem;\n  max-width : 350px;\n  img {\n    display : block;\n    width : 2rem;\n    height : 2rem;\n    border-radius : 50%;\n  }\n  .date {\n    position : absolute;\n    right : 0;\n  }\n"]);
@@ -36183,131 +36203,124 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 var ProfileImg = _styledComponents.default.div(_templateObject());
 
+var HrElem = _styledComponents.default.hr(_templateObject2());
+
 function Posts() {
-  var _reducer = (0, _reducer3.default)(),
-      _reducer2 = _slicedToArray(_reducer, 2),
-      state = _reducer2[0],
-      dispatch = _reducer2[1];
+  var _useContext = (0, _react.useContext)(_reducer.PostContext),
+      state = _useContext.state;
 
-  (0, _react.useEffect)(function () {// console.log(state);
-  }, [state]);
-
-  var postElem = function postElem(posts) {
-    return posts.map(function (post) {
-      return /*#__PURE__*/_react.default.createElement(PostContainer, {
-        key: post.postId,
-        post: post,
-        dispatch: dispatch,
-        state: state,
-        likes: post.likes
-      }, /*#__PURE__*/_react.default.createElement(UserNamePost, null), /*#__PURE__*/_react.default.createElement(ImagePost, null), /*#__PURE__*/_react.default.createElement(PostDescription, null), /*#__PURE__*/_react.default.createElement(LikeButton, null), /*#__PURE__*/_react.default.createElement(_Comments.default, {
-        comments: post.comments
-      }));
-    });
-  };
-
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, postElem(state.posts));
+  var posts = state.posts;
+  var element = posts.map(function (post, index) {
+    return /*#__PURE__*/_react.default.createElement("div", {
+      key: index
+    }, /*#__PURE__*/_react.default.createElement(UserNamePost, {
+      post: post
+    }), /*#__PURE__*/_react.default.createElement(PostDescription, {
+      post: post
+    }), /*#__PURE__*/_react.default.createElement(ImagePost, {
+      post: post
+    }), /*#__PURE__*/_react.default.createElement(LikeButton, {
+      post: post
+    }), /*#__PURE__*/_react.default.createElement(_Comments.default, {
+      post: post
+    }), /*#__PURE__*/_react.default.createElement(HrElem, {
+      post: post
+    }));
+  });
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, element);
 }
 
-var PostContext = (0, _react.createContext)();
-exports.PostContext = PostContext;
+function ImagePost(_ref) {
+  var post = _ref.post;
 
-function PostContainer(_ref) {
-  var children = _ref.children,
-      post = _ref.post,
-      likes = _ref.likes,
-      dispatch = _ref.dispatch,
-      state = _ref.state;
-  return /*#__PURE__*/_react.default.createElement(PostContext.Provider, {
-    value: {
-      post: post,
-      likes: likes,
-      dispatch: dispatch,
-      state: state
-    }
-  }, children);
-}
-
-function ImagePost() {
-  var _useContext = (0, _react.useContext)(PostContext),
-      post = _useContext.post;
-
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("img", {
+  var postImgElem = /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("img", {
     src: post.imgUrl,
     alt: "Cool post"
   }));
+
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, postImgElem);
 }
 
-function LikeButton() {
-  var _useContext2 = (0, _react.useContext)(PostContext),
-      likes = _useContext2.likes,
-      dispatch = _useContext2.dispatch,
-      post = _useContext2.post;
-
-  var postId = post.postId;
+function LikeButton(_ref2) {
+  var post = _ref2.post;
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("button", {
     onClick: function onClick() {
       dispatch({
         type: "LIKE_POST",
-        id: postId,
+        id: post.postId,
         like: {
           likeId: Date.now(),
           userId: Date.now()
         }
       });
     }
-  }, "like"), /*#__PURE__*/_react.default.createElement("span", null, likes.length));
+  }, "like"), /*#__PURE__*/_react.default.createElement("span", null));
 }
 
-function PostDescription() {
-  var _useContext3 = (0, _react.useContext)(PostContext),
-      post = _useContext3.post;
+function PostDescription(_ref3) {
+  var post = _ref3.post;
 
-  return /*#__PURE__*/_react.default.createElement("div", null, post.postTextContent);
+  var postDescription = /*#__PURE__*/_react.default.createElement("div", null, post.postTextContent);
+
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, postDescription);
 }
 
-function UserNamePost() {
-  var _useContext4 = (0, _react.useContext)(PostContext),
-      post = _useContext4.post,
-      state = _useContext4.state;
+function UserNamePost(_ref4) {
+  var post = _ref4.post;
 
-  var userData = state.users;
-
-  var _userData$find = userData.find(function (user) {
+  var _userData$find = _userData.default.find(function (user) {
     return user.userId === post.postId;
   }),
       userName = _userData$find.userName;
 
-  var date = post.date;
-  var postDate = new Date(date).toDateString();
-  return /*#__PURE__*/_react.default.createElement(ProfileImg, null, /*#__PURE__*/_react.default.createElement("img", {
+  var date = new Date(post.date);
+
+  var ImagePostElem = /*#__PURE__*/_react.default.createElement(ProfileImg, null, /*#__PURE__*/_react.default.createElement("img", {
     src: post.imgUrl,
-    className: "profile"
-  }), /*#__PURE__*/_react.default.createElement("p", null, userName), /*#__PURE__*/_react.default.createElement("p", {
+    alt: "post image"
+  }), /*#__PURE__*/_react.default.createElement("span", null, userName), /*#__PURE__*/_react.default.createElement("p", {
     className: "date"
-  }, postDate));
+  }, date.toLocaleDateString()));
+
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, ImagePostElem);
 }
-},{"react":"node_modules/react/index.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../reducer/reducer":"reducer/reducer.js","./Comments":"components/Comments.js"}],"components/Feed.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../reducer/reducer":"reducer/reducer.js","../userData.json":"userData.json","./Comments":"components/Comments.js"}],"components/Feed.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = Feed;
+exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _data = _interopRequireDefault(require("../data.json"));
-
 var _Posts = _interopRequireDefault(require("./Posts"));
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function Feed() {
-  var initialData = {};
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Posts.default, null));
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n  max-width : 800px;\n  margin-inline : auto; \n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
 }
-},{"react":"node_modules/react/index.js","../data.json":"data.json","./Posts":"components/Posts.js"}],"components/Header.js":[function(require,module,exports) {
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var FeedStyle = _styledComponents.default.div(_templateObject());
+
+var Feed = function Feed() {
+  return /*#__PURE__*/_react.default.createElement(FeedStyle, null, /*#__PURE__*/_react.default.createElement(_Posts.default, null));
+};
+
+var _default = Feed;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","./Posts":"components/Posts.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/Header.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36321,10 +36334,12 @@ var _reactRouterDom = require("react-router-dom");
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
+var _reducer = _interopRequireDefault(require("../reducer/reducer"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  display : flex;\n  flex-direction : row;\n  gap : 2rem;\n"]);
+  var data = _taggedTemplateLiteral(["\n  display : flex;\n  flex-direction : row;\n  gap : 2rem;\n  a {\n    text-decoration : none;\n    color : #223422;\n  }\n  a:active,\n  a:focus {\n    color : #22ff22;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -36344,9 +36359,9 @@ function Header() {
     to: "/addPost"
   }, /*#__PURE__*/_react.default.createElement("h2", null, "Add post")), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
     to: "options"
-  }, /*#__PURE__*/_react.default.createElement("h2", null, "Options"))));
+  }, /*#__PURE__*/_react.default.createElement("h2", null, "UserName"))));
 }
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/Options.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../reducer/reducer":"reducer/reducer.js"}],"components/Options.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36356,12 +36371,28 @@ exports.default = Options;
 
 var _react = _interopRequireDefault(require("react"));
 
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function Options() {
-  return /*#__PURE__*/_react.default.createElement("div", null, "I am the Options components");
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n  label, input {\n    display : block;\n  }\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
 }
-},{"react":"node_modules/react/index.js"}],"App.js":[function(require,module,exports) {
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var FormUserStyled = _styledComponents.default.form(_templateObject());
+
+function Options() {
+  return /*#__PURE__*/_react.default.createElement(FormUserStyled, null, /*#__PURE__*/_react.default.createElement("label", null, " User name", /*#__PURE__*/_react.default.createElement("input", null)), /*#__PURE__*/_react.default.createElement("label", null, " User image url", /*#__PURE__*/_react.default.createElement("input", null)), /*#__PURE__*/_react.default.createElement("button", null, "Save"));
+}
+},{"react":"node_modules/react/index.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36381,10 +36412,26 @@ var _Header = _interopRequireDefault(require("./components/Header"));
 
 var _Options = _interopRequireDefault(require("./components/Options"));
 
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n  max-width : 600px;\n  margin-inline : auto;\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var AppStyle = _styledComponents.default.div(_templateObject());
+
 function App() {
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Header.default, null), /*#__PURE__*/_react.default.createElement(_reactRouter.Switch, null, /*#__PURE__*/_react.default.createElement(_reactRouter.Route, {
+  return /*#__PURE__*/_react.default.createElement(AppStyle, null, /*#__PURE__*/_react.default.createElement(_Header.default, null), /*#__PURE__*/_react.default.createElement(_reactRouter.Switch, null, /*#__PURE__*/_react.default.createElement(_reactRouter.Route, {
     exact: true,
     path: "/"
   }, /*#__PURE__*/_react.default.createElement(_Feed.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouter.Route, {
@@ -36394,7 +36441,7 @@ function App() {
     path: "/options"
   }, /*#__PURE__*/_react.default.createElement(_Options.default, null))));
 }
-},{"react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js","./components/AddPosts":"components/AddPosts.js","./components/Feed":"components/Feed.js","./components/Header":"components/Header.js","./components/Options":"components/Options.js"}],"index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js","./components/AddPosts":"components/AddPosts.js","./components/Feed":"components/Feed.js","./components/Header":"components/Header.js","./components/Options":"components/Options.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -36405,10 +36452,12 @@ var _reactRouterDom = require("react-router-dom");
 
 var _App = _interopRequireDefault(require("./App"));
 
+var _reducer = require("./reducer/reducer");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom.default.render( /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(_App.default, null)), document.getElementById("root"));
-},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./App":"App.js"}],"../../../AppData/Roaming/npm/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+_reactDom.default.render( /*#__PURE__*/_react.default.createElement(_reducer.PostContainerProvider, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(_App.default, null))), document.getElementById("root"));
+},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./App":"App.js","./reducer/reducer":"reducer/reducer.js"}],"../../../AppData/Roaming/npm/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -36436,7 +36485,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60945" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60471" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

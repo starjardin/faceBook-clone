@@ -20,7 +20,7 @@
         "commentId": 16068230335,
         "userId": "606823033835",
         "date": 1606823314406,
-        "commentTextContent": "Hello, This is super cool."
+        "textComment": "Hello, This is super cool."
       }
     ]
   },
@@ -30,21 +30,19 @@
     "postTextContent": "This is the description",
     "userId": "121212",
     "imgUrl": "https://picsum.photos/id/237/150/200",
-    "likes": [
-      
-    ],
+    "likes": [],
     "comments": [
       {
         "commentId": 1606823033835,
         "userId": "121212",
         "date": 1606823314406,
-        "commentTextContent": "Hello, super post."
+        "textComment": "Hello, super post."
       },
       {
         "commentId": 16068230335,
         "userId": "606823033835",
         "date": 1606823314406,
-        "commentTextContent": "Hello, This is super cool."
+        "textComment": "Hello, This is super cool."
       }
     ]
   }

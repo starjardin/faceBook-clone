@@ -1,6 +1,7 @@
-import React, { useContext, createContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
-import reducer from '../reducer/reducer'
+import { PostContext } from '../reducer/reducer'
+import userData from '../userData.json'
 import Comments from './Comments'
 
 const ProfileImg = styled.div`
@@ -20,62 +21,49 @@ const ProfileImg = styled.div`
     right : 0;
   }
 `
+const HrElem = styled.hr`
+  display : block;
+  margin-bottom : 2rem;
+  margin-top : 2rem;
+`
+export default function Posts () {
+  const { state } = useContext(PostContext)
+  const { posts } = state
 
-export default function Posts() {
-  const [state, dispatch] = reducer()
-  useEffect(() => {
-    // console.log(state);
-  }, [state])
-  const postElem = (posts) => {
-    return (
-      posts.map(post => (
-        <PostContainer
-          key={post.postId}
-          post={post}
-          dispatch={dispatch}
-          state={state}
-          likes={post.likes}
-        >
-          <UserNamePost />
-          <ImagePost />
-          <PostDescription />
-          <LikeButton />
-          <Comments comments={ post.comments }/>
-        </PostContainer>
-      ))
-    )
-  }
+  const element = posts.map((post, index) => {
+    return <div key={index}>
+      <UserNamePost post={post} />
+      <PostDescription post={post} />
+      <ImagePost post={post} />
+      <LikeButton post={post} />
+      <Comments post={post} />
+      <HrElem post={post} />
+    </div>
+  })
   return (
     <>
-      {postElem(state.posts)}
+      {element}
     </>
   )
 }
 
-const PostContext = createContext()
-function PostContainer({ children, post, likes, dispatch, state }) {
+function ImagePost({post}) {
+  const postImgElem = <div><img src={post.imgUrl} alt="Cool post" /></div>
   return (
-    <PostContext.Provider value={{post, likes, dispatch, state}}>
-      {children}
-    </PostContext.Provider>
+  <>
+    {postImgElem}
+  </>
   )
 }
 
-function ImagePost() {
-  const { post } = useContext(PostContext)
-  return <div><img src={post.imgUrl} alt="Cool post" /></div>
-}
-
-function LikeButton() {
-  const { likes, dispatch, post } = useContext(PostContext)
-  const { postId } = post
+function LikeButton({ post }) {
   return (
     <div>
         <button
           onClick={() => {
           dispatch({
             type: "LIKE_POST",
-            id: postId,
+            id: post.postId,
             like: {
               likeId: Date.now(),
               userId : Date.now()
@@ -83,29 +71,32 @@ function LikeButton() {
             })
           }}
         >like</button>
-      <span>{ likes.length }</span>
+      <span>{  }</span>
     </div>
   )
 }
 
-function PostDescription() {
-  const { post } = useContext(PostContext)
-  return <div>{ post.postTextContent }</div>
+function PostDescription({ post }) {
+  const postDescription = <div >{ post.postTextContent }</div>
+  return (
+  <>
+    { postDescription}
+  </>
+  )
 }
 
-function UserNamePost() {
-  const { post, state } = useContext(PostContext)
-  const userData = state.users
-  const { userName } = userData.find(user => user.userId === post.postId)
-  const date = post.date
-  const postDate = new Date(date).toDateString()
-  
+function UserNamePost({ post }) {
+  const {userName} = userData.find(user => user.userId === post.postId)
+  const date = new Date(post.date)
+  const ImagePostElem = <ProfileImg>
+    <img src={post.imgUrl} alt='post image' />
+    <span>{ userName }</span>
+    <p className="date">{date.toLocaleDateString()}</p>
+  </ProfileImg>
   return (
-    <ProfileImg>
-      <img src={post.imgUrl} className="profile" />
-      <p>{ userName }</p>
-      <p className="date">{postDate}</p>
-    </ProfileImg>
+    <>
+        {ImagePostElem}
+    </>
   )
 }
 
