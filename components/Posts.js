@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { PostContext } from '../reducer/reducer'
-import userData from '../userData.json'
 import Comments from './Comments'
+import { ACTIONS } from '../reducer/reducer'
 
 const ProfileImg = styled.div`
   display : flex;
@@ -28,11 +28,11 @@ const HrElem = styled.hr`
 `
 export default function Posts () {
   const { state } = useContext(PostContext)
-  const { posts } = state
+  const { posts, users } = state
 
   const element = posts.map((post, index) => {
     return <div key={index}>
-      <UserNamePost post={post} />
+      <UserNamePost post={post}/>
       <PostDescription post={post} />
       <ImagePost post={post} />
       <LikeButton post={post} />
@@ -57,21 +57,23 @@ function ImagePost({post}) {
 }
 
 function LikeButton({ post }) {
+  const { dispatch, state } = useContext(PostContext)
+  const { currentUserId } = state.currentUser
   return (
     <div>
         <button
           onClick={() => {
           dispatch({
-            type: "LIKE_POST",
-            id: post.postId,
+            type: ACTIONS.LIKE_POST,
+            id: currentUserId,
             like: {
-              likeId: Date.now(),
-              userId : Date.now()
+              likeId: 939834123,
+              userId : currentUserId
             }
-            })
+          })
           }}
         >like</button>
-      <span>{  }</span>
+      <span>{ post.likes.length }</span>
     </div>
   )
 }
@@ -86,10 +88,13 @@ function PostDescription({ post }) {
 }
 
 function UserNamePost({ post }) {
-  const {userName} = userData.find(user => user.userId === post.postId)
+  const { state } = useContext(PostContext)
+  const { users } = state
+  const { currentUserId } = state.currentUser
+  const { userName } = users.find(user => user.userId === currentUserId)
   const date = new Date(post.date)
   const ImagePostElem = <ProfileImg>
-    <img src={post.imgUrl} alt='post image' />
+    <img src={ post.imgUrl } alt='post image' />
     <span>{ userName }</span>
     <p className="date">{date.toLocaleDateString()}</p>
   </ProfileImg>

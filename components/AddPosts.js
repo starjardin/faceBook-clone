@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { PostContext } from '../reducer/reducer'
 import styled from 'styled-components'
+import { ACTIONS } from '../reducer/reducer'
 
 const FormStyle = styled.form`
   padding : 2rem;
@@ -33,7 +34,11 @@ const FormStyle = styled.form`
 
 export default function AddPosts() {
   const { state, dispatch } = useContext(PostContext)
-  const {posts} = state
+  const [postContent, setPostContent] = useState('')
+  const [postImage, setPostImage] = useState('')
+  const { posts } = state
+  const { currentUserId } = state.currentUser
+  
   const handleSubmitPost = (e) => {
     e.preventDefault()
     const newPost = {
@@ -43,9 +48,9 @@ export default function AddPosts() {
         comments : [],
         postTextContent : e.target.description.value,
         date : Date.now(),
-        id : Date.now()
+      id : currentUserId
       }
-    dispatch({ type: "ADD_NEW_POST", posts: [...posts, newPost]})
+    dispatch({ type: ACTIONS.ADD_NEW_POST, posts: [...posts, newPost]})
     e.target.reset()
   }
 
@@ -55,10 +60,14 @@ export default function AddPosts() {
         <textarea
           name="description"
           placeholder="Write here your posts description"
+          value={postContent}
+          onChange={(e) => setPostContent(e.target.value)}
         />
         <input type="url"
           name="imgUrl"
           placeholder="https://picsum.photos/seed/picsum/200/300"
+          value={postImage}
+          onChange={(e) => setPostImage(e.target.value)}
         />
         <button>Post</button>
       </FormStyle>

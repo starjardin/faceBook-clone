@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { PostContext } from './Posts'
 import styled from 'styled-components'
-
+import { ACTIONS } from '../reducer/reducer'
 const CommentStyle = styled.div`
   display : flex;
   align-items : center;
@@ -30,7 +30,7 @@ export default function Comments({ post }) {
     e.preventDefault();
     dispatch({
       comments: comments,
-      type: "ADD_COMMENT",
+      type: ACTIONS.ADD_COMMENTS,
       id : post.postId,
       newComment : {
         user : "New user",
@@ -39,17 +39,17 @@ export default function Comments({ post }) {
         id : Date.now(),
         textComment : e.target.comment.value
       }
-   })
+    })
+    e.target.reset();
   }
 
-  const date = new Date(post.date)
   return (
     <>
       {post.comments.map((comment, index) => (
         <CommentStyle key={index}>
           <img src={post.imgUrl} />
           <p>{comment.textComment}</p>
-          <p className='date'>{ date.toLocaleDateString() }</p>
+          <p className='date'>{ new Date(comment.date).toLocaleDateString() }</p>
         </CommentStyle>
       ))}
       <form onSubmit={addCommenstFunction}>

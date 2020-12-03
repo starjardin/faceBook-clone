@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import reducer from '../reducer/reducer'
+import { PostContext } from "../reducer/reducer"
 
 const HeaderStyle = styled.div`
   display : flex;
@@ -17,7 +17,24 @@ const HeaderStyle = styled.div`
   }
 `
 
+const ProfileStyle = styled.div`
+  display : flex;
+  flex-direction : row;
+  align-items : center;
+  gap : 1rem;
+  img {
+    width : 2rem;
+    height : 2rem;
+    border-radius : 50%;
+  }
+`
+
 export default function Header() {
+  const { state } = useContext(PostContext)
+  const { users, currentUser } = state
+  const { currentUserId } = currentUser
+  const currentUserObj = users.find(user => user.userId === currentUserId)
+
   return (
     <>
       <h1>OnjaBook</h1>
@@ -29,7 +46,10 @@ export default function Header() {
           <h2>Add post</h2>
         </Link>
         <Link to="options">
-          <h2 >UserName</h2>
+          <ProfileStyle>
+            <h2 >{currentUserObj.userName}</h2>
+            <img src={currentUserObj.profilePictureUrl} />
+          </ProfileStyle>
         </Link>
       </HeaderStyle>
     </>
