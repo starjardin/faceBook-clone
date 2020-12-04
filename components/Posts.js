@@ -43,14 +43,16 @@ export default function Posts () {
   const { posts } = state
 
   const postElement = posts.map((post, index) => {
-    return <Post key={index} post={post}>
-      <UserNamePost />
-      <PostDescription />
-      <ImagePost />
-      <LikeButton />
-      <Comments />
-      <HrElem />
-    </Post>
+    return(
+      <Post key={index} post={post}>
+        <UserNamePost />
+        <PostDescription />
+        <ImagePost />
+        <LikeButton />
+        <Comments />
+        <HrElem />
+      </Post>
+    )
   })
   return (
     <>
@@ -91,17 +93,21 @@ function LikeButton() {
     dispatch({ type: ACTIONS.UNLIKE_POST, postId : post.postId })
   }
 
+  const buttonLikes = hasAlreadyLiked()
+        ? <button
+            onClick={unlikePost}
+          >
+            unlike
+          </button>
+        : <button
+            onClick={likePost}
+          >
+            like
+          </button>
+
   return (
     <div>
-      {
-        hasAlreadyLiked() ? 
-          <button
-            onClick={unlikePost}
-          >unlike</button> :
-          <button
-            onClick={likePost}
-          >like</button>
-      }
+      { buttonLikes }
       <span>{ post.likes.length }</span>
     </div>
   )
@@ -112,7 +118,7 @@ function PostDescription() {
   const postDescription = <div >{ post.postTextContent }</div>
   return (
   <>
-    { postDescription}
+    { postDescription }
   </>
   )
 }
@@ -120,18 +126,22 @@ function PostDescription() {
 function UserNamePost() {
   const { post } = useContext(PostContextComponent)
   const { state } = useContext(PostContext)
+
   const { users } = state
   const { currentUserId } = state.currentUser
+
   const currentUserName = users.find(user => user.userId === currentUserId)
   const date = new Date(post.date)
-  const ImagePostElem = <ProfileImg>
+
+  const imagePostElem = <ProfileImg>
     <img src={ currentUserName.profilePictureUrl } alt='post image' />
     <span>{ currentUserName.userName }</span>
     <p className="date">{date.toLocaleDateString()}</p>
   </ProfileImg>
+  
   return (
     <>
-        {ImagePostElem}
+        {imagePostElem}
     </>
   )
 }

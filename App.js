@@ -5,6 +5,7 @@ import Feed from './components/Feed'
 import Header from './components/Header'
 import Options from './components/Options'
 import styled from 'styled-components'
+import ProfileOptions from './components/ProfileOptions'
 
 const AppStyle = styled.div`
   max-width : 600px;
@@ -24,6 +25,7 @@ export default function App() {
         </Route>
         <Route path="/options">
           <Options />
+          {/* <ProfileOptions /> */}
         </Route>
      </Switch>
     </AppStyle>

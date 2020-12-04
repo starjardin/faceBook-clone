@@ -15,7 +15,8 @@ export const ACTIONS = {
   ADD_COMMENTS: "add_comments",
   LOADING_DATA: "loading_data",
   UPDATE_CURRENT_USER: "update_current_user",
-  UNLIKE_POST : "unlike_post"
+  UNLIKE_POST: "unlike_post",
+  ADD_NEW_USER : "add_new_user"
 }
 
 const reducerFunc = (state, action) => {
@@ -82,6 +83,12 @@ const reducerFunc = (state, action) => {
       return {
         ...state,
         posts: commentedPost
+      }
+    }
+    case ACTIONS.ADD_NEW_USER : {
+      return {
+        ...state,
+        users : [...users, action.newUser]
       }
     }
     case ACTIONS.UPDATE_CURRENT_USER : {

@@ -33965,7 +33965,8 @@ var ACTIONS = {
   ADD_COMMENTS: "add_comments",
   LOADING_DATA: "loading_data",
   UPDATE_CURRENT_USER: "update_current_user",
-  UNLIKE_POST: "unlike_post"
+  UNLIKE_POST: "unlike_post",
+  ADD_NEW_USER: "add_new_user"
 };
 exports.ACTIONS = ACTIONS;
 
@@ -34042,6 +34043,13 @@ var reducerFunc = function reducerFunc(state, action) {
         });
         return _objectSpread(_objectSpread({}, state), {}, {
           posts: commentedPost
+        });
+      }
+
+    case ACTIONS.ADD_NEW_USER:
+      {
+        return _objectSpread(_objectSpread({}, state), {}, {
+          users: [].concat(_toConsumableArray(users), [action.newUser])
         });
       }
 
@@ -36424,11 +36432,12 @@ function LikeButton() {
     });
   }
 
-  return /*#__PURE__*/_react.default.createElement("div", null, hasAlreadyLiked() ? /*#__PURE__*/_react.default.createElement("button", {
+  var buttonLikes = hasAlreadyLiked() ? /*#__PURE__*/_react.default.createElement("button", {
     onClick: unlikePost
   }, "unlike") : /*#__PURE__*/_react.default.createElement("button", {
     onClick: likePost
-  }, "like"), /*#__PURE__*/_react.default.createElement("span", null, post.likes.length));
+  }, "like");
+  return /*#__PURE__*/_react.default.createElement("div", null, buttonLikes, /*#__PURE__*/_react.default.createElement("span", null, post.likes.length));
 }
 
 function PostDescription() {
@@ -36454,14 +36463,14 @@ function UserNamePost() {
   });
   var date = new Date(post.date);
 
-  var ImagePostElem = /*#__PURE__*/_react.default.createElement(ProfileImg, null, /*#__PURE__*/_react.default.createElement("img", {
+  var imagePostElem = /*#__PURE__*/_react.default.createElement(ProfileImg, null, /*#__PURE__*/_react.default.createElement("img", {
     src: currentUserName.profilePictureUrl,
     alt: "post image"
   }), /*#__PURE__*/_react.default.createElement("span", null, currentUserName.userName), /*#__PURE__*/_react.default.createElement("p", {
     className: "date"
   }, date.toLocaleDateString()));
 
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, ImagePostElem);
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, imagePostElem);
 }
 },{"react":"node_modules/react/index.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../reducer/reducer":"reducer/reducer.js","./Comments":"components/Comments.js"}],"components/Feed.js":[function(require,module,exports) {
 "use strict";
@@ -36618,10 +36627,6 @@ function Options() {
       state = _useContext.state,
       dispatch = _useContext.dispatch;
 
-  var users = state.users,
-      currentUser = state.currentUser;
-  var currentUserId = currentUser.currentUserId;
-
   var _useState = (0, _react.useState)(''),
       _useState2 = _slicedToArray(_useState, 2),
       profilePictureUrl = _useState2[0],
@@ -36632,6 +36637,9 @@ function Options() {
       userName = _useState4[0],
       setUserName = _useState4[1];
 
+  var users = state.users,
+      currentUser = state.currentUser;
+  var currentUserId = currentUser.currentUserId;
   var currentUserObj = users.find(function (user) {
     return user.userId === currentUserId;
   });
@@ -36667,7 +36675,35 @@ function Options() {
     }
   })), /*#__PURE__*/_react.default.createElement("button", null, "Save"));
 }
-},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"App.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/ProfileOptions.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = ProfileOptions;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactRouterDom = require("react-router-dom");
+
+var _Options = _interopRequireDefault(require("./Options"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ProfileOptions() {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(Option, null), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Switch, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+    exact: true,
+    path: "/options"
+  }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+    exact: true,
+    path: "/options/switchProfile"
+  }, "Switch"), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+    exact: true,
+    path: "/options/addProfile"
+  })));
+}
+},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./Options":"components/Options.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36688,6 +36724,8 @@ var _Header = _interopRequireDefault(require("./components/Header"));
 var _Options = _interopRequireDefault(require("./components/Options"));
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _ProfileOptions = _interopRequireDefault(require("./components/ProfileOptions"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36716,7 +36754,7 @@ function App() {
     path: "/options"
   }, /*#__PURE__*/_react.default.createElement(_Options.default, null))));
 }
-},{"react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js","./components/AddPosts":"components/AddPosts.js","./components/Feed":"components/Feed.js","./components/Header":"components/Header.js","./components/Options":"components/Options.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js","./components/AddPosts":"components/AddPosts.js","./components/Feed":"components/Feed.js","./components/Header":"components/Header.js","./components/Options":"components/Options.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","./components/ProfileOptions":"components/ProfileOptions.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));

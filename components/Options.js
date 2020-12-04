@@ -11,10 +11,12 @@ const FormUserStyled = styled.form`
 
 export default function Options() {
   const { state, dispatch } = useContext(PostContext)
-  const { users, currentUser } = state
-  const { currentUserId } = currentUser
   const [ profilePictureUrl, setProfilePictureUrl ] = useState('')
   const [userName, setUserName] = useState('')
+
+  const { users, currentUser } = state
+  const { currentUserId } = currentUser
+  
   const currentUserObj = users.find(user => user.userId === currentUserId)
 
   useEffect(() => {
