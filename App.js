@@ -24,8 +24,8 @@ export default function App() {
           <AddPosts />
         </Route>
         <Route path="/options">
-          <Options />
-          {/* <ProfileOptions /> */}
+          {/* <Options /> */}
+          <ProfileOptions />
         </Route>
      </Switch>
     </AppStyle>

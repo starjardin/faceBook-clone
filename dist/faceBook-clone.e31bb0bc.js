@@ -36675,7 +36675,123 @@ function Options() {
     }
   })), /*#__PURE__*/_react.default.createElement("button", null, "Save"));
 }
-},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/ProfileOptions.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/SwitchProfile.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = SwitchProfile;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _reducer = require("../reducer/reducer");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function SwitchProfile() {
+  var _useContext = (0, _react.useContext)(_reducer.PostContext),
+      state = _useContext.state,
+      dispatch = _useContext.dispatch;
+
+  var users = state.users,
+      currentUser = state.currentUser;
+
+  function generateUserFinc() {
+    return users.map(function (user) {
+      return /*#__PURE__*/_react.default.createElement("option", {
+        key: user.userId,
+        value: user.userName
+      }, user.userName);
+    });
+  }
+
+  return /*#__PURE__*/_react.default.createElement("select", null, generateUserFinc(), /*#__PURE__*/_react.default.createElement("option", null));
+}
+},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js"}],"components/AddProfie.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = AddProfile;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _reducer = require("../reducer/reducer");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function AddProfile() {
+  var _useContext = (0, _react.useContext)(_reducer.PostContext),
+      dispatch = _useContext.dispatch;
+
+  var _useState = (0, _react.useState)(''),
+      _useState2 = _slicedToArray(_useState, 2),
+      usserName = _useState2[0],
+      setUserName = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(''),
+      _useState4 = _slicedToArray(_useState3, 2),
+      profilePicture = _useState4[0],
+      setProfilePicture = _useState4[1];
+
+  var _useState5 = (0, _react.useState)(''),
+      _useState6 = _slicedToArray(_useState5, 2),
+      birthdate = _useState6[0],
+      setBirthdate = _useState6[1];
+
+  function createNewUser() {
+    e.preventDefault();
+    var newUser = {
+      userId: usserName,
+      userName: profilePicture,
+      birthDate: birthdate,
+      profilePictureUrl: "https://picsum.photos/100"
+    };
+    dispatch({
+      type: _reducer.ACTIONS.ADD_NEW_USER,
+      newUser: newUser
+    });
+  }
+
+  return /*#__PURE__*/_react.default.createElement("form", {
+    onSubmit: createNewUser
+  }, /*#__PURE__*/_react.default.createElement("label", null, "UserName", /*#__PURE__*/_react.default.createElement("input", {
+    required: true,
+    onChange: function onChange(e) {
+      return setUserName(e.target.value);
+    },
+    name: "userName"
+  })), /*#__PURE__*/_react.default.createElement("label", null, " Profile Picture", /*#__PURE__*/_react.default.createElement("input", {
+    required: true,
+    onChange: function onChange(e) {
+      return setProfilePicture(e.target.value);
+    }
+  })), /*#__PURE__*/_react.default.createElement("label", null, " Birthdate :", /*#__PURE__*/_react.default.createElement("input", {
+    required: true,
+    onChange: function onChange(e) {
+      return setBirthdate(e.target.value);
+    }
+  })), /*#__PURE__*/_react.default.createElement("button", null, "Create"));
+}
+},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js"}],"components/ProfileOptions.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36687,23 +36803,49 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactRouterDom = require("react-router-dom");
 
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
 var _Options = _interopRequireDefault(require("./Options"));
+
+var _SwitchProfile = _interopRequireDefault(require("./SwitchProfile"));
+
+var _AddProfie = _interopRequireDefault(require("./AddProfie"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n  display : flex;\n  flex-directionn : row;\n  justify-content : space-between;\n  a:focus {\n    color : #ccc;\n  }\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var LinkStyle = _styledComponents.default.div(_templateObject());
+
 function ProfileOptions() {
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(Option, null), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Switch, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(LinkStyle, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: "/options"
+  }, "Options"), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: "/options/switchProfile"
+  }, "Switch"), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: "/options/addProfile"
+  }, "Add new user")), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Switch, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     exact: true,
     path: "/options"
-  }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+  }, /*#__PURE__*/_react.default.createElement(_Options.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     exact: true,
     path: "/options/switchProfile"
-  }, "Switch"), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+  }, /*#__PURE__*/_react.default.createElement(_SwitchProfile.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     exact: true,
     path: "/options/addProfile"
-  })));
+  }, /*#__PURE__*/_react.default.createElement(_AddProfie.default, null))));
 }
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./Options":"components/Options.js"}],"App.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","./Options":"components/Options.js","./SwitchProfile":"components/SwitchProfile.js","./AddProfie":"components/AddProfie.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36752,7 +36894,7 @@ function App() {
     path: "/addPost"
   }, /*#__PURE__*/_react.default.createElement(_AddPosts.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouter.Route, {
     path: "/options"
-  }, /*#__PURE__*/_react.default.createElement(_Options.default, null))));
+  }, /*#__PURE__*/_react.default.createElement(_ProfileOptions.default, null))));
 }
 },{"react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js","./components/AddPosts":"components/AddPosts.js","./components/Feed":"components/Feed.js","./components/Header":"components/Header.js","./components/Options":"components/Options.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","./components/ProfileOptions":"components/ProfileOptions.js"}],"index.js":[function(require,module,exports) {
 "use strict";
