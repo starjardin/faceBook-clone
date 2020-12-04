@@ -1,7 +1,10 @@
-import React, { useContext } from 'react'
-import { PostContext } from './Posts'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
+
+import { PostContext } from './Posts'
 import { ACTIONS } from '../reducer/reducer'
+import { PostContextComponent } from './Posts'
+
 const CommentStyle = styled.div`
   display : flex;
   align-items : center;
@@ -21,44 +24,68 @@ const CommentStyle = styled.div`
   }
 `
 
-export default function Comments({ post }) {
+export default function Comments() {
+  const { post } = useContext(PostContextComponent)
   const { state, dispatch } = useContext(PostContext)
-  const { posts, users } = state
-  const { comments } = posts
+  const [newCommentText, setNewCommentText] = useState('')
+
+  const { users, currentUser } = state
+  const { comments } = post
+  const currentUserObj = users.find(user => user.userId === currentUser.currentUserId)
     
   function addCommenstFunction(e) {
     e.preventDefault();
+    const newComment = {
+        userName : currentUserObj.userName,
+        img : currentUserObj.profilePictureUrl,
+        date: Date.now(),
+        commentId : Date.now(),
+        textComment : newCommentText
+      }
     dispatch({
       comments: comments,
       type: ACTIONS.ADD_COMMENTS,
-      id : post.postId,
-      newComment : {
-        user : "New user",
-        img : "https://picsum.photos/id/237/200/300",
-        date: Date.now(),
-        id : Date.now(),
-        textComment : e.target.comment.value
-      }
+      id: post.postId,
+      newComment : newComment
+      
     })
-    e.target.reset();
+    setNewCommentText('')
   }
 
   return (
     <>
-      {post.comments.map((comment, index) => (
-        <CommentStyle key={index}>
-          <img src={post.imgUrl} />
+      {comments.map((comment, index) => (
+        <div key={index}>
+          <CommentStyle>
+            < Commenter comment={comment} />
+          </CommentStyle>
           <p>{comment.textComment}</p>
-          <p className='date'>{ new Date(comment.date).toLocaleDateString() }</p>
-        </CommentStyle>
+        </div>
       ))}
       <form onSubmit={addCommenstFunction}>
         <input
           name="comment"
+          value={newCommentText}
+          onChange={(e) => setNewCommentText(e.target.value)}
           placeholder="Be the first commenter"
         />
         <button>Post</button>
       </form>
+    </>
+  )
+}
+
+const Commenter = ({ comment }) => {
+  const { state } = useContext(PostContext)
+  const { users, currentUser } = state
+
+  const currentUserObj = users.find(user => user.userId === currentUser.currentUserId)
+
+  return (
+    <>
+      <img src={currentUserObj.profilePictureUrl} />
+        <p>{currentUserObj.userName}</p>
+      <p className='date'>{new Date(comment.date).toLocaleDateString()}</p>
     </>
   )
 }

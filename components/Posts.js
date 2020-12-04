@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, createContext, Children } from 'react'
 import styled from 'styled-components'
 import { PostContext } from '../reducer/reducer'
 import Comments from './Comments'
@@ -26,28 +26,41 @@ const HrElem = styled.hr`
   margin-bottom : 2rem;
   margin-top : 2rem;
 `
-export default function Posts () {
+
+const PostContextComponent = createContext()
+
+function Post({ children, post }) {
   const { state } = useContext(PostContext)
   const { posts, users } = state
+  return <PostContextComponent.Provider value={{state, users, posts, post}}>
+    {children}
+  </PostContextComponent.Provider>
+}
 
-  const element = posts.map((post, index) => {
-    return <div key={index}>
-      <UserNamePost post={post}/>
-      <PostDescription post={post} />
-      <ImagePost post={post} />
-      <LikeButton post={post} />
-      <Comments post={post} />
-      <HrElem post={post} />
-    </div>
+
+export default function Posts () {
+  const { state } = useContext(PostContext)
+  const { posts } = state
+
+  const postElement = posts.map((post, index) => {
+    return <Post key={index} post={post}>
+      <UserNamePost />
+      <PostDescription />
+      <ImagePost />
+      <LikeButton />
+      <Comments />
+      <HrElem />
+    </Post>
   })
   return (
     <>
-      {element}
+      {postElement}
     </>
   )
 }
 
-function ImagePost({post}) {
+function ImagePost() {
+  const { post } = useContext(PostContextComponent)
   const postImgElem = <div><img src={post.imgUrl} alt="Cool post" /></div>
   return (
   <>
@@ -56,29 +69,46 @@ function ImagePost({post}) {
   )
 }
 
-function LikeButton({ post }) {
+function LikeButton() {
   const { dispatch, state } = useContext(PostContext)
+  const { post } = useContext(PostContextComponent)
   const { currentUserId } = state.currentUser
+
+  function hasAlreadyLiked () {
+    return post.likes.some(like => like.userId === currentUserId)
+  }
+
+  function likePost() {
+    const newLike = { likeId: 939834123, userId : currentUserId }
+    dispatch({
+      type: ACTIONS.LIKE_POST,
+      postId : post.postId,
+      like: newLike
+    })
+  }
+
+  function unlikePost() {
+    dispatch({ type: ACTIONS.UNLIKE_POST, postId : post.postId })
+  }
+
   return (
     <div>
-        <button
-          onClick={() => {
-          dispatch({
-            type: ACTIONS.LIKE_POST,
-            id: currentUserId,
-            like: {
-              likeId: 939834123,
-              userId : currentUserId
-            }
-          })
-          }}
-        >like</button>
+      {
+        hasAlreadyLiked() ? 
+          <button
+            onClick={unlikePost}
+          >unlike</button> :
+          <button
+            onClick={likePost}
+          >like</button>
+      }
       <span>{ post.likes.length }</span>
     </div>
   )
 }
 
-function PostDescription({ post }) {
+function PostDescription() {
+  const { post } = useContext(PostContextComponent)
   const postDescription = <div >{ post.postTextContent }</div>
   return (
   <>
@@ -87,15 +117,16 @@ function PostDescription({ post }) {
   )
 }
 
-function UserNamePost({ post }) {
+function UserNamePost() {
+  const { post } = useContext(PostContextComponent)
   const { state } = useContext(PostContext)
   const { users } = state
   const { currentUserId } = state.currentUser
-  const { userName } = users.find(user => user.userId === currentUserId)
+  const currentUserName = users.find(user => user.userId === currentUserId)
   const date = new Date(post.date)
   const ImagePostElem = <ProfileImg>
-    <img src={ post.imgUrl } alt='post image' />
-    <span>{ userName }</span>
+    <img src={ currentUserName.profilePictureUrl } alt='post image' />
+    <span>{ currentUserName.userName }</span>
     <p className="date">{date.toLocaleDateString()}</p>
   </ProfileImg>
   return (
@@ -106,3 +137,4 @@ function UserNamePost({ post }) {
 }
 
 export { PostContext }
+export { PostContextComponent }

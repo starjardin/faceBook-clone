@@ -33859,7 +33859,7 @@ module.exports = [{
   "date": 1606824657576,
   "postTextContent": "This is the description",
   "userId": "121212",
-  "imgUrl": "https://picsum.photos/id/237/150/200",
+  "imgUrl": "https://picsum.photos/id/870/200/300?grayscale&blur=2",
   "likes": [{
     "likeId": "160682338",
     "userId": "1234"
@@ -33869,7 +33869,7 @@ module.exports = [{
   }],
   "comments": [{
     "commentId": 16068230335,
-    "userId": "606823033835",
+    "userId": "121212",
     "date": 1606823314406,
     "textComment": "Hello, This is super cool."
   }]
@@ -33877,7 +33877,7 @@ module.exports = [{
   "postId": "1606825130841",
   "date": 1606824657576,
   "postTextContent": "This is the description",
-  "userId": "121212",
+  "userId": "1606823314406",
   "imgUrl": "https://picsum.photos/id/237/150/200",
   "likes": [],
   "comments": [{
@@ -33896,10 +33896,10 @@ module.exports = [{
 module.exports = [{
   "userId": "121212",
   "userName": "Honey",
-  "profilePictureUrl": "https://picsum.photos/100",
+  "profilePictureUrl": "https://picsum.photos/200/300/?blur",
   "birthDate": "13/09/1991"
 }, {
-  "userId": "1606825130841",
+  "userId": "1606823314406",
   "userName": "Fandrama",
   "profilePictureUrl": "https://picsum.photos/100",
   "birthDate": "13/09/1991"
@@ -33964,7 +33964,8 @@ var ACTIONS = {
   ADD_NEW_POST: "add_new_post",
   ADD_COMMENTS: "add_comments",
   LOADING_DATA: "loading_data",
-  UPDATE_CURRENT_USER: "update_current_user"
+  UPDATE_CURRENT_USER: "update_current_user",
+  UNLIKE_POST: "unlike_post"
 };
 exports.ACTIONS = ACTIONS;
 
@@ -33975,7 +33976,8 @@ var reducerFunc = function reducerFunc(state, action) {
   //   }, 1000)
   // }, [])
   var users = state.users,
-      posts = state.posts;
+      posts = state.posts,
+      currentUser = state.currentUser;
 
   switch (action.type) {
     // case "LOADING_DATA": {
@@ -33989,13 +33991,7 @@ var reducerFunc = function reducerFunc(state, action) {
     case ACTIONS.LIKE_POST:
       {
         var addLikes = posts.map(function (post) {
-          console.log(post.likes.some(function (like) {
-            return like.likeId === action.id;
-          }));
-
-          if (post.likes.some(function (like) {
-            return like.likeId === action.id;
-          })) {
+          if (post.postId === action.postId) {
             return _objectSpread(_objectSpread({}, post), {}, {
               likes: [].concat(_toConsumableArray(post.likes), [action.like])
             });
@@ -34005,6 +34001,24 @@ var reducerFunc = function reducerFunc(state, action) {
         });
         return _objectSpread(_objectSpread({}, state), {}, {
           posts: addLikes
+        });
+      }
+
+    case ACTIONS.UNLIKE_POST:
+      {
+        var newPost = posts.map(function (post) {
+          if (post.postId === action.postId) {
+            return _objectSpread(_objectSpread({}, post), {}, {
+              likes: post.likes.filter(function (like) {
+                return like.userId !== currentUser.currentUserId;
+              })
+            });
+          }
+
+          return post;
+        });
+        return _objectSpread(_objectSpread({}, state), {}, {
+          posts: newPost
         });
       }
 
@@ -36119,7 +36133,7 @@ function AddPosts() {
     var newPost = {
       userName: "Romeo",
       imgUrl: "https://picsum.photos/seed/picsum/200/300",
-      like: [],
+      likes: [],
       comments: [],
       postTextContent: e.target.description.value,
       date: Date.now(),
@@ -36161,9 +36175,9 @@ exports.default = Comments;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _Posts = require("./Posts");
-
 var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+var _Posts = require("./Posts");
 
 var _reducer = require("../reducer/reducer");
 
@@ -36172,6 +36186,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _templateObject() {
   var data = _taggedTemplateLiteral(["\n  display : flex;\n  align-items : center;\n  padding-top : 1rem;\n  position : relative;\n  gap : 1rem;\n  max-width : 350px;\n  img {\n    display : block;\n    width : 2rem;\n    height : 2rem;\n    border-radius : 50%;\n  }\n  .date {\n    position : absolute;\n    right : 0;\n  }\n"]);
@@ -36187,50 +36213,80 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 var CommentStyle = _styledComponents.default.div(_templateObject());
 
-function Comments(_ref) {
-  var post = _ref.post;
+function Comments() {
+  var _useContext = (0, _react.useContext)(_Posts.PostContextComponent),
+      post = _useContext.post;
 
-  var _useContext = (0, _react.useContext)(_Posts.PostContext),
-      state = _useContext.state,
-      dispatch = _useContext.dispatch;
+  var _useContext2 = (0, _react.useContext)(_Posts.PostContext),
+      state = _useContext2.state,
+      dispatch = _useContext2.dispatch;
 
-  var posts = state.posts,
-      users = state.users;
-  var comments = posts.comments;
+  var _useState = (0, _react.useState)(''),
+      _useState2 = _slicedToArray(_useState, 2),
+      newCommentText = _useState2[0],
+      setNewCommentText = _useState2[1];
+
+  var users = state.users,
+      currentUser = state.currentUser;
+  var comments = post.comments;
+  var currentUserObj = users.find(function (user) {
+    return user.userId === currentUser.currentUserId;
+  });
 
   function addCommenstFunction(e) {
     e.preventDefault();
+    var newComment = {
+      userName: currentUserObj.userName,
+      img: currentUserObj.profilePictureUrl,
+      date: Date.now(),
+      commentId: Date.now(),
+      textComment: newCommentText
+    };
     dispatch({
       comments: comments,
       type: _reducer.ACTIONS.ADD_COMMENTS,
       id: post.postId,
-      newComment: {
-        user: "New user",
-        img: "https://picsum.photos/id/237/200/300",
-        date: Date.now(),
-        id: Date.now(),
-        textComment: e.target.comment.value
-      }
+      newComment: newComment
     });
-    e.target.reset();
+    setNewCommentText('');
   }
 
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, post.comments.map(function (comment, index) {
-    return /*#__PURE__*/_react.default.createElement(CommentStyle, {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, comments.map(function (comment, index) {
+    return /*#__PURE__*/_react.default.createElement("div", {
       key: index
-    }, /*#__PURE__*/_react.default.createElement("img", {
-      src: post.imgUrl
-    }), /*#__PURE__*/_react.default.createElement("p", null, comment.textComment), /*#__PURE__*/_react.default.createElement("p", {
-      className: "date"
-    }, new Date(comment.date).toLocaleDateString()));
+    }, /*#__PURE__*/_react.default.createElement(CommentStyle, null, /*#__PURE__*/_react.default.createElement(Commenter, {
+      comment: comment
+    })), /*#__PURE__*/_react.default.createElement("p", null, comment.textComment));
   }), /*#__PURE__*/_react.default.createElement("form", {
     onSubmit: addCommenstFunction
   }, /*#__PURE__*/_react.default.createElement("input", {
     name: "comment",
+    value: newCommentText,
+    onChange: function onChange(e) {
+      return setNewCommentText(e.target.value);
+    },
     placeholder: "Be the first commenter"
   }), /*#__PURE__*/_react.default.createElement("button", null, "Post")));
 }
-},{"react":"node_modules/react/index.js","./Posts":"components/Posts.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../reducer/reducer":"reducer/reducer.js"}],"components/Posts.js":[function(require,module,exports) {
+
+var Commenter = function Commenter(_ref) {
+  var comment = _ref.comment;
+
+  var _useContext3 = (0, _react.useContext)(_Posts.PostContext),
+      state = _useContext3.state;
+
+  var users = state.users,
+      currentUser = state.currentUser;
+  var currentUserObj = users.find(function (user) {
+    return user.userId === currentUser.currentUserId;
+  });
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("img", {
+    src: currentUserObj.profilePictureUrl
+  }), /*#__PURE__*/_react.default.createElement("p", null, currentUserObj.userName), /*#__PURE__*/_react.default.createElement("p", {
+    className: "date"
+  }, new Date(comment.date).toLocaleDateString()));
+};
+},{"react":"node_modules/react/index.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","./Posts":"components/Posts.js","../reducer/reducer":"reducer/reducer.js"}],"components/Posts.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36243,6 +36299,7 @@ Object.defineProperty(exports, "PostContext", {
     return _reducer.PostContext;
   }
 });
+exports.PostContextComponent = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -36284,34 +36341,45 @@ var ProfileImg = _styledComponents.default.div(_templateObject());
 
 var HrElem = _styledComponents.default.hr(_templateObject2());
 
-function Posts() {
+var PostContextComponent = (0, _react.createContext)();
+exports.PostContextComponent = PostContextComponent;
+
+function Post(_ref) {
+  var children = _ref.children,
+      post = _ref.post;
+
   var _useContext = (0, _react.useContext)(_reducer.PostContext),
       state = _useContext.state;
 
   var posts = state.posts,
       users = state.users;
-  var element = posts.map(function (post, index) {
-    return /*#__PURE__*/_react.default.createElement("div", {
-      key: index
-    }, /*#__PURE__*/_react.default.createElement(UserNamePost, {
+  return /*#__PURE__*/_react.default.createElement(PostContextComponent.Provider, {
+    value: {
+      state: state,
+      users: users,
+      posts: posts,
       post: post
-    }), /*#__PURE__*/_react.default.createElement(PostDescription, {
-      post: post
-    }), /*#__PURE__*/_react.default.createElement(ImagePost, {
-      post: post
-    }), /*#__PURE__*/_react.default.createElement(LikeButton, {
-      post: post
-    }), /*#__PURE__*/_react.default.createElement(_Comments.default, {
-      post: post
-    }), /*#__PURE__*/_react.default.createElement(HrElem, {
-      post: post
-    }));
-  });
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, element);
+    }
+  }, children);
 }
 
-function ImagePost(_ref) {
-  var post = _ref.post;
+function Posts() {
+  var _useContext2 = (0, _react.useContext)(_reducer.PostContext),
+      state = _useContext2.state;
+
+  var posts = state.posts;
+  var postElement = posts.map(function (post, index) {
+    return /*#__PURE__*/_react.default.createElement(Post, {
+      key: index,
+      post: post
+    }, /*#__PURE__*/_react.default.createElement(UserNamePost, null), /*#__PURE__*/_react.default.createElement(PostDescription, null), /*#__PURE__*/_react.default.createElement(ImagePost, null), /*#__PURE__*/_react.default.createElement(LikeButton, null), /*#__PURE__*/_react.default.createElement(_Comments.default, null), /*#__PURE__*/_react.default.createElement(HrElem, null));
+  });
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, postElement);
+}
+
+function ImagePost() {
+  var _useContext3 = (0, _react.useContext)(PostContextComponent),
+      post = _useContext3.post;
 
   var postImgElem = /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("img", {
     src: post.imgUrl,
@@ -36321,56 +36389,75 @@ function ImagePost(_ref) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, postImgElem);
 }
 
-function LikeButton(_ref2) {
-  var post = _ref2.post;
+function LikeButton() {
+  var _useContext4 = (0, _react.useContext)(_reducer.PostContext),
+      dispatch = _useContext4.dispatch,
+      state = _useContext4.state;
 
-  var _useContext2 = (0, _react.useContext)(_reducer.PostContext),
-      dispatch = _useContext2.dispatch,
-      state = _useContext2.state;
+  var _useContext5 = (0, _react.useContext)(PostContextComponent),
+      post = _useContext5.post;
 
   var currentUserId = state.currentUser.currentUserId;
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("button", {
-    onClick: function onClick() {
-      dispatch({
-        type: _reducer.ACTIONS.LIKE_POST,
-        id: currentUserId,
-        like: {
-          likeId: 939834123,
-          userId: currentUserId
-        }
-      });
-    }
+
+  function hasAlreadyLiked() {
+    return post.likes.some(function (like) {
+      return like.userId === currentUserId;
+    });
+  }
+
+  function likePost() {
+    var newLike = {
+      likeId: 939834123,
+      userId: currentUserId
+    };
+    dispatch({
+      type: _reducer.ACTIONS.LIKE_POST,
+      postId: post.postId,
+      like: newLike
+    });
+  }
+
+  function unlikePost() {
+    dispatch({
+      type: _reducer.ACTIONS.UNLIKE_POST,
+      postId: post.postId
+    });
+  }
+
+  return /*#__PURE__*/_react.default.createElement("div", null, hasAlreadyLiked() ? /*#__PURE__*/_react.default.createElement("button", {
+    onClick: unlikePost
+  }, "unlike") : /*#__PURE__*/_react.default.createElement("button", {
+    onClick: likePost
   }, "like"), /*#__PURE__*/_react.default.createElement("span", null, post.likes.length));
 }
 
-function PostDescription(_ref3) {
-  var post = _ref3.post;
+function PostDescription() {
+  var _useContext6 = (0, _react.useContext)(PostContextComponent),
+      post = _useContext6.post;
 
   var postDescription = /*#__PURE__*/_react.default.createElement("div", null, post.postTextContent);
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, postDescription);
 }
 
-function UserNamePost(_ref4) {
-  var post = _ref4.post;
+function UserNamePost() {
+  var _useContext7 = (0, _react.useContext)(PostContextComponent),
+      post = _useContext7.post;
 
-  var _useContext3 = (0, _react.useContext)(_reducer.PostContext),
-      state = _useContext3.state;
+  var _useContext8 = (0, _react.useContext)(_reducer.PostContext),
+      state = _useContext8.state;
 
   var users = state.users;
   var currentUserId = state.currentUser.currentUserId;
-
-  var _users$find = users.find(function (user) {
+  var currentUserName = users.find(function (user) {
     return user.userId === currentUserId;
-  }),
-      userName = _users$find.userName;
-
+  });
   var date = new Date(post.date);
 
   var ImagePostElem = /*#__PURE__*/_react.default.createElement(ProfileImg, null, /*#__PURE__*/_react.default.createElement("img", {
-    src: post.imgUrl,
+    src: currentUserName.profilePictureUrl,
     alt: "post image"
-  }), /*#__PURE__*/_react.default.createElement("span", null, userName), /*#__PURE__*/_react.default.createElement("p", {
+  }), /*#__PURE__*/_react.default.createElement("span", null, currentUserName.userName), /*#__PURE__*/_react.default.createElement("p", {
     className: "date"
   }, date.toLocaleDateString()));
 
@@ -36673,7 +36760,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55228" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50290" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

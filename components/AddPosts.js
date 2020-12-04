@@ -44,7 +44,7 @@ export default function AddPosts() {
     const newPost = {
         userName : "Romeo",
         imgUrl : "https://picsum.photos/seed/picsum/200/300",
-        like: [],
+        likes : [],
         comments : [],
         postTextContent : e.target.description.value,
         date : Date.now(),

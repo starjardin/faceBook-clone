@@ -15,7 +15,6 @@ export default function Options() {
   const { currentUserId } = currentUser
   const [ profilePictureUrl, setProfilePictureUrl ] = useState('')
   const [userName, setUserName] = useState('')
-
   const currentUserObj = users.find(user => user.userId === currentUserId)
 
   useEffect(() => {

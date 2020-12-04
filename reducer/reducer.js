@@ -14,7 +14,8 @@ export const ACTIONS = {
   ADD_NEW_POST : "add_new_post",
   ADD_COMMENTS: "add_comments",
   LOADING_DATA: "loading_data",
-  UPDATE_CURRENT_USER : "update_current_user"
+  UPDATE_CURRENT_USER: "update_current_user",
+  UNLIKE_POST : "unlike_post"
 }
 
 const reducerFunc = (state, action) => {
@@ -25,7 +26,7 @@ const reducerFunc = (state, action) => {
   //   }, 1000)
   // }, [])
 
-  const { users, posts } = state
+  const { users, posts, currentUser } = state
   switch (action.type) {
     // case "LOADING_DATA": {
     //   return {
@@ -37,8 +38,7 @@ const reducerFunc = (state, action) => {
     // }
     case ACTIONS.LIKE_POST: {
       const addLikes = posts.map(post => {
-        console.log(post.likes.some(like => like.likeId === action.id));
-        if (post.likes.some(like => like.likeId === action.id)) {
+        if (post.postId === action.postId) {
           return {
             ...post,
             likes : [...post.likes, action.like]
@@ -49,6 +49,21 @@ const reducerFunc = (state, action) => {
       return {
         ...state,
         posts : addLikes
+      }
+    }
+    case ACTIONS.UNLIKE_POST: {
+      const newPost = posts.map(post => {
+        if (post.postId === action.postId) {
+          return {
+            ...post,
+            likes : post.likes.filter(like => like.userId !== currentUser.currentUserId)
+          }
+        }
+        return post
+      })
+      return {
+        ...state,
+        posts : newPost
       }
     }
     case ACTIONS.ADD_NEW_POST : {

@@ -34,7 +34,7 @@ export default function Header() {
   const { users, currentUser } = state
   const { currentUserId } = currentUser
   const currentUserObj = users.find(user => user.userId === currentUserId)
-
+  
   return (
     <>
       <h1>OnjaBook</h1>
