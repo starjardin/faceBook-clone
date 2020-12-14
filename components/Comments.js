@@ -11,7 +11,6 @@ const CommentStyle = styled.div`
   padding-top : 1rem;
   position : relative;
   gap : 1rem;
-  max-width : 350px;
   img {
     display : block;
     width : 2rem;
@@ -21,6 +20,23 @@ const CommentStyle = styled.div`
   .date {
     position : absolute;
     right : 0;
+  }
+`
+
+const FormInputStyle = styled.form`
+  background-color : #ccc;
+  display : flex;
+  justify-content : space-between;
+  padding : 1rem;
+  border-radius : 3px;
+  input {
+    border : none;
+    padding : .5rem;
+    border-radius : 3px;
+  }
+  button {
+    border : none;
+    padding-inline : .9rem;
   }
 `
 
@@ -35,6 +51,10 @@ export default function Comments() {
     
   function addCommenstFunction(e) {
     e.preventDefault();
+    if (newCommentText.trim() === '') {
+      alert("Please write your comments")
+      return
+    }
     const newComment = {
         userName : currentUserObj.userName,
         img : currentUserObj.profilePictureUrl,
@@ -62,7 +82,7 @@ export default function Comments() {
           <p>{comment.textComment}</p>
         </div>
       ))}
-      <form onSubmit={addCommenstFunction}>
+      <FormInputStyle onSubmit={addCommenstFunction}>
         <input
           name="comment"
           value={newCommentText}
@@ -70,7 +90,7 @@ export default function Comments() {
           placeholder="Be the first commenter"
         />
         <button>Post</button>
-      </form>
+      </FormInputStyle>
     </>
   )
 }

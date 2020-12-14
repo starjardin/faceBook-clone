@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { ACTIONS } from '../reducer/reducer'
 
 const FormStyle = styled.form`
-  padding : 2rem;
   textarea {
     height : 5rem;
     max-height : 7rem;
@@ -12,7 +11,8 @@ const FormStyle = styled.form`
     max-width : 80vw;
   }
   input {
-    width : 60vw;
+    display : block;
+    width : 100%;
   }
   button {
     padding : 0.5rem 2rem;
@@ -21,6 +21,7 @@ const FormStyle = styled.form`
   }
   textarea, input {
     display : block;
+    width : 100%;
     margin-block : 1rem;
     font-size: 16px;
     font-size: max(16px, 1em);
