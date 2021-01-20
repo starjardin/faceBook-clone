@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "disable-react-devtools": "^1.0.0",
     "eslint": "^7.14.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

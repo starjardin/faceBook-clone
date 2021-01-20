@@ -117,7 +117,13 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/object-assign/index.js":[function(require,module,exports) {
+})({"node_modules/disable-react-devtools/index.js":[function(require,module,exports) {
+// Overrides the following:
+// https://github.com/facebook/react-devtools/blob/master/shells/chrome/src/checkForReact.js
+if ("development" === 'production' && window.__REACT_DEVTOOLS_GLOBAL_HOOK__ && Object.keys(window.__REACT_DEVTOOLS_GLOBAL_HOOK__._renderers).length) {
+  window.__REACT_DEVTOOLS_GLOBAL_HOOK__._renderers = {};
+}
+},{}],"node_modules/object-assign/index.js":[function(require,module,exports) {
 /*
 object-assign
 (c) Sindre Sorhus
@@ -36105,7 +36111,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  textarea {\n    height : 5rem;\n    max-height : 7rem;\n    width : 50vw;\n    max-width : 80vw;\n  }\n  input {\n    display : block;\n    width : 100%;\n  }\n  button {\n    padding : 0.5rem 2rem;\n    border : none;\n    box-shadow : 1px 1px 3px #ccc;\n  }\n  textarea, input {\n    display : block;\n    width : 100%;\n    margin-block : 1rem;\n    font-size: 16px;\n    font-size: max(16px, 1em);\n    font-family: inherit;\n    padding: 0.25em 0.5em;\n    background-color: #fff;\n    border: 2px solid #ccc;\n    border-radius: 4px;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  textarea {\n    height : 5rem;\n    max-height : 7rem;\n    width : 50vw;\n    max-width : 80vw;\n  }\n  input {\n    display : block;\n    width : 100%;\n  }\n  button {\n    padding : 0.5rem 2rem;\n    border : none;\n    box-shadow : 1px 1px 3px #ccc;\n  }\n  textarea, input {\n    display : block;\n    width : 100%;\n    margin-block : 1rem;\n    font-size: 16px;\n    max-width :  100%;\n    min-width :  100%;\n    min-height : 5rem;\n    font-size: max(16px, 1em);\n    font-family: inherit;\n    padding: 0.25em 0.5em;\n    background-color: #fff;\n    border: 2px solid #ccc;\n    border-radius: 4px;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -36761,7 +36767,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  label, input {\n    display : block;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  label {\n    margin : 1rem 0;\n  }\n  label, input {\n    display : block;\n    width : 100%;\n  }\n  input {\n    border : 1px solid #ccc;\n    padding : 1rem;\n    border-radius : 4px;\n  }\n  button {\n    padding : .5rem 1rem;\n    margin : 1rem 0;\n    border : .8px solid #ccc;\n    border-radius : 3px;\n    cursor : pointer;\n    color : #333;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -36827,177 +36833,7 @@ function Options() {
     }
   })), /*#__PURE__*/_react.default.createElement("button", null, "Save"));
 }
-},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"components/SwitchProfile.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = SwitchProfile;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _reducer = require("../reducer/reducer");
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function SwitchProfile() {
-  var _useContext = (0, _react.useContext)(_reducer.PostContext),
-      state = _useContext.state,
-      dispatch = _useContext.dispatch;
-
-  var users = state.users,
-      currentUser = state.currentUser;
-
-  function generateUserFinc() {
-    return users.map(function (user) {
-      return /*#__PURE__*/_react.default.createElement("option", {
-        key: user.userId,
-        value: user.userName
-      }, user.userName);
-    });
-  }
-
-  return /*#__PURE__*/_react.default.createElement("select", null, generateUserFinc(), /*#__PURE__*/_react.default.createElement("option", null));
-}
-},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js"}],"components/AddProfie.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = AddProfile;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _reducer = require("../reducer/reducer");
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function AddProfile() {
-  var _useContext = (0, _react.useContext)(_reducer.PostContext),
-      dispatch = _useContext.dispatch;
-
-  var _useState = (0, _react.useState)(''),
-      _useState2 = _slicedToArray(_useState, 2),
-      usserName = _useState2[0],
-      setUserName = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(''),
-      _useState4 = _slicedToArray(_useState3, 2),
-      profilePicture = _useState4[0],
-      setProfilePicture = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(''),
-      _useState6 = _slicedToArray(_useState5, 2),
-      birthdate = _useState6[0],
-      setBirthdate = _useState6[1];
-
-  function createNewUser() {
-    e.preventDefault();
-    var newUser = {
-      userId: usserName,
-      userName: profilePicture,
-      birthDate: birthdate,
-      profilePictureUrl: "https://picsum.photos/100"
-    };
-    dispatch({
-      type: _reducer.ACTIONS.ADD_NEW_USER,
-      newUser: newUser
-    });
-  }
-
-  return /*#__PURE__*/_react.default.createElement("form", {
-    onSubmit: createNewUser
-  }, /*#__PURE__*/_react.default.createElement("label", null, "UserName", /*#__PURE__*/_react.default.createElement("input", {
-    required: true,
-    onChange: function onChange(e) {
-      return setUserName(e.target.value);
-    },
-    name: "userName"
-  })), /*#__PURE__*/_react.default.createElement("label", null, " Profile Picture", /*#__PURE__*/_react.default.createElement("input", {
-    required: true,
-    onChange: function onChange(e) {
-      return setProfilePicture(e.target.value);
-    }
-  })), /*#__PURE__*/_react.default.createElement("label", null, " Birthdate :", /*#__PURE__*/_react.default.createElement("input", {
-    required: true,
-    onChange: function onChange(e) {
-      return setBirthdate(e.target.value);
-    }
-  })), /*#__PURE__*/_react.default.createElement("button", null, "Create"));
-}
-},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js"}],"components/ProfileOptions.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = ProfileOptions;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _reactRouterDom = require("react-router-dom");
-
-var _styledComponents = _interopRequireDefault(require("styled-components"));
-
-var _Options = _interopRequireDefault(require("./Options"));
-
-var _SwitchProfile = _interopRequireDefault(require("./SwitchProfile"));
-
-var _AddProfie = _interopRequireDefault(require("./AddProfie"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  display : flex;\n  flex-directionn : row;\n  justify-content : space-between;\n  a:focus {\n    color : #ccc;\n  }\n"]);
-
-  _templateObject = function _templateObject() {
-    return data;
-  };
-
-  return data;
-}
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-var LinkStyle = _styledComponents.default.div(_templateObject());
-
-function ProfileOptions() {
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(LinkStyle, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-    to: "/options"
-  }, "Options"), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-    to: "/options/switchProfile"
-  }, "Switch"), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-    to: "/options/addProfile"
-  }, "Add new user")), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Switch, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
-    exact: true,
-    path: "/options"
-  }, /*#__PURE__*/_react.default.createElement(_Options.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
-    exact: true,
-    path: "/options/switchProfile"
-  }, /*#__PURE__*/_react.default.createElement(_SwitchProfile.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
-    exact: true,
-    path: "/options/addProfile"
-  }, /*#__PURE__*/_react.default.createElement(_AddProfie.default, null))));
-}
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","./Options":"components/Options.js","./SwitchProfile":"components/SwitchProfile.js","./AddProfie":"components/AddProfie.js"}],"App.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../reducer/reducer":"reducer/reducer.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37019,8 +36855,6 @@ var _Options = _interopRequireDefault(require("./components/Options"));
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
-var _ProfileOptions = _interopRequireDefault(require("./components/ProfileOptions"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
@@ -37035,6 +36869,8 @@ function _templateObject() {
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
+require("disable-react-devtools");
+
 var AppStyle = _styledComponents.default.div(_templateObject());
 
 function App() {
@@ -37046,9 +36882,9 @@ function App() {
     path: "/addPost"
   }, /*#__PURE__*/_react.default.createElement(_AddPosts.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouter.Route, {
     path: "/options"
-  }, /*#__PURE__*/_react.default.createElement(_ProfileOptions.default, null))));
+  }, /*#__PURE__*/_react.default.createElement(_Options.default, null))));
 }
-},{"react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js","./components/AddPosts":"components/AddPosts.js","./components/Feed":"components/Feed.js","./components/Header":"components/Header.js","./components/Options":"components/Options.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","./components/ProfileOptions":"components/ProfileOptions.js"}],"index.js":[function(require,module,exports) {
+},{"disable-react-devtools":"node_modules/disable-react-devtools/index.js","react":"node_modules/react/index.js","react-router":"node_modules/react-router/esm/react-router.js","./components/AddPosts":"components/AddPosts.js","./components/Feed":"components/Feed.js","./components/Header":"components/Header.js","./components/Options":"components/Options.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -37063,8 +36899,10 @@ var _reducer = require("./reducer/reducer");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+require('disable-react-devtools');
+
 _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_reducer.PostContainerProvider, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(_App.default, null))), document.getElementById("root"));
-},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./App":"App.js","./reducer/reducer":"reducer/reducer.js"}],"../../../AppData/Roaming/npm/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"disable-react-devtools":"node_modules/disable-react-devtools/index.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./App":"App.js","./reducer/reducer":"reducer/reducer.js"}],"../../../AppData/Roaming/npm/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -37092,7 +36930,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63980" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50093" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

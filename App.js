@@ -1,3 +1,4 @@
+require("disable-react-devtools")
 import React from 'react'
 import { Route, Switch } from 'react-router'
 import AddPosts from './components/AddPosts'
@@ -5,7 +6,6 @@ import Feed from './components/Feed'
 import Header from './components/Header'
 import Options from './components/Options'
 import styled from 'styled-components'
-import ProfileOptions from './components/ProfileOptions'
 
 const AppStyle = styled.div`
   max-width : 600px;
@@ -24,8 +24,7 @@ export default function App() {
           <AddPosts />
         </Route>
         <Route path="/options">
-          {/* <Options /> */}
-          <ProfileOptions />
+          <Options />
         </Route>
      </Switch>
     </AppStyle>

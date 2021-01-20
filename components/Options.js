@@ -4,8 +4,25 @@ import styled from 'styled-components'
 import { ACTIONS } from "../reducer/reducer"
 
 const FormUserStyled = styled.form`
+  label {
+    margin : 1rem 0;
+  }
   label, input {
     display : block;
+    width : 100%;
+  }
+  input {
+    border : 1px solid #ccc;
+    padding : 1rem;
+    border-radius : 4px;
+  }
+  button {
+    padding : .5rem 1rem;
+    margin : 1rem 0;
+    border : .8px solid #ccc;
+    border-radius : 3px;
+    cursor : pointer;
+    color : #333;
   }
 `
 

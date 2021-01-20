@@ -24,6 +24,9 @@ const FormStyle = styled.form`
     width : 100%;
     margin-block : 1rem;
     font-size: 16px;
+    max-width :  100%;
+    min-width :  100%;
+    min-height : 5rem;
     font-size: max(16px, 1em);
     font-family: inherit;
     padding: 0.25em 0.5em;
